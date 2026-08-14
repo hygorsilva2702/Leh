@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nossa Órbita ✨</title>
+  <style>
+    :root {
+      --primary: #9d4edd;
+      --secondary: #ff85a1;
+      --glass: rgba(255, 255, 255, 0.08);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+
+    body {
+      background: radial-gradient(circle at center, #10002b 0%, #050505 100%);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding: 20px;
+    }
+
+    /* Fundo Animado */
+    .bg-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
+    .star { position: absolute; background: white; border-radius: 50%; opacity: 0.5; animation: twinkle 4s infinite; }
+    .heart { position: absolute; color: var(--secondary); font-size: 15px; animation: float 6s infinite; }
+
+    @keyframes twinkle { 0%, 100% { opacity: 0.2; } 50% { opacity: 0.8; } }
+    @keyframes float { 0% { transform: translateY(100vh); opacity: 0; } 50% { opacity: 1; } 100% { transform: translateY(-10vh); opacity: 0; } }
+
+    /* Vinil */
+    .vinyl-container { display: flex; justify-content: center; margin-bottom: 25px; }
+    .vinyl {
+      width: 100px; height: 100px; background: #111; border-radius: 50%;
+      border: 8px solid #222; position: relative;
+      animation: spin 6s linear infinite;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    }
+    .vinyl::after { content: ''; position: absolute; top: 40px; left: 40px; width: 20px; height: 20px; background: #fff; border-radius: 50%; }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+
+    /* Card */
+    .card {
+      background: var(--glass);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 35px;
+      border-radius: 30px;
+      max-width: 450px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    h1 { font-size: 1.4rem; color: #fff; margin-bottom: 15px; }
+    .text { font-size: 0.95rem; line-height: 1.6; color: #ddd; margin-bottom: 25px; }
+    
+    .btn {
+      width: 100%; padding: 14px; border-radius: 12px; border: none; cursor: pointer;
+      font-weight: 600; margin-bottom: 10px; transition: 0.3s;
+      background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2);
+    }
+    .btn:hover { background: rgba(255,255,255,0.2); }
+    .btn-main { background: linear-gradient(45deg, var(--primary), var(--secondary)); border: none; }
+
+    #poem { display: none; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 15px; margin: 20px 0; font-style: italic; font-size: 0.85rem; text-align: left; border-left: 3px solid var(--secondary); }
+  </style>
+</head>
+<body>
+
+<div class="bg-animation" id="bg"></div>
+
+<div class="card">
+  <div class="vinyl-container">
+    <div class="vinyl"></div>
+  </div>
+
+  <h1>Nosso Universo ✨</h1>
+  <div class="text">
+    Às vezes me perco nos meus pensamentos, mas eles sempre gravitam em torno de você. Assim como uma música que não sai da cabeça, sua presença faz tudo ao redor ter um ritmo diferente.
+  </div>
+
+  <button class="btn btn-main" onclick="togglePoem()">✨ Uma surpresa para você</button>
+  <div id="poem">
+    "Eu te amo porque te amo.<br>
+    Não precisas ser amante,<br>
+    e nem sempre sabes sê-lo.<br>
+    Eu te amo porque te amo.<br>
+    Amor é estado de graça<br>
+    e com amor não se paga.<br><br>
+
+    Amor é dado de graça,<br>
+    é semeado no vento,<br>
+    na cachoeira, no eclipse.<br>
+    Amor foge a dicionários<br>
+    e a regulamentos vários."<br><br>
+    — Carlos Drummond de Andrade
+  </div>
+
+  <div style="margin-top: 30px;">
+    <p style="margin-bottom: 15px; font-size: 0.9rem;">O que vamos fazer na nossa próxima órbita?</p>
+    
+    <button class="btn" onclick="sendWhatsapp('Massagem')">💆‍♀️ Massagem relaxante</button>
+    <button class="btn" onclick="sendWhatsapp('Assistir algo')">🎬 Assistir um filme/série</button>
+    <button class="btn" onclick="sendWhatsapp('Jogar algo')">🎮 Jogar algo juntos</button>
+    <button class="btn" onclick="sendWhatsapp('Outra coisa')">🌟 Tenho uma ideia diferente</button>
+    <button class="btn" id="btnNo" onclick="shrink()">❌ Nenhuma das opções</button>
+  </div>
+</div>
+
+<script>
+  // Criar partículas
+  const bg = document.getElementById('bg');
+  for(let i=0; i<30; i++) {
+    const el = document.createElement('div');
+    const isStar = Math.random() > 0.5;
+    el.className = isStar ? 'star' : 'heart';
+    el.innerHTML = isStar ? '' : '❤';
+    el.style.left = Math.random() * 100 + 'vw';
+    el.style.width = el.style.height = isStar ? (Math.random() * 3 + 1) + 'px' : 'auto';
+    bg.appendChild(el);
+  }
+
+  function togglePoem() {
+    const p = document.getElementById('poem');
+    p.style.display = p.style.display === 'block' ? 'none' : 'block';
+  }
+
+  function sendWhatsapp(opt) {
+    const msg = `Oii! Adorei a surpresa. Quero a opção: ${opt}`;
+    window.location.href = `https://wa.me/5511968498721?text=${encodeURIComponent(msg)}`;
+  }
+
+  let scale = 1;
+  function shrink() {
+    const btn = document.getElementById('btnNo');
+    scale -= 0.25;
+    btn.style.transform = `scale(${scale})`;
+    if(scale <= 0.2) {
+        btn.innerText = "Você não tem escolha! 😉";
+        btn.style.background = "transparent";
+        btn.style.border = "none";
+    }
+  }
+</script>
+</body>
+</html>
